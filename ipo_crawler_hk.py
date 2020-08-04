@@ -1,3 +1,4 @@
+import datetime
 import time
 import json
 import random
@@ -27,12 +28,14 @@ def HKNewStockCalendar():
 
         for each_tr in tr_list:
             td_list = each_tr.select('td')
+            public_price = td_list[6].text.strip().replace('-', '~')
+            
             new_stocks_data = {
                 'market': 'HK',
                 'stock_code': str(td_list[0].text.strip()),
                 'stock_name': str(td_list[1].text.strip()),
                 'total_issued': str(td_list[2].text.strip()),
-                'public_price': str(td_list[6].text.strip()),
+                'public_price': str(public_price),
                 'lots_size': str(td_list[7].text.strip()),
                 'currency': str(td_list[8].text.strip()),
                 'subscription_date_start': str(td_list[9].text.strip()),
@@ -40,25 +43,47 @@ def HKNewStockCalendar():
                 'public_date': str(td_list[13].text.strip()),
             }
             new_stocks.append(new_stocks_data)
+            
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    new_stock_list = []
+    for new_stock in new_stocks:
+        new_stock_list.append(new_stock.values())        
+    df = pd.DataFrame(new_stock_list, columns=['市场', '股票代码', '股票名称', '发行总数(万股)', '上市价格', '每手股数', '币种', '申购起始', '申购结束', '上市时间'])
+    if not os.path.exists('data/hk/'):
+        os.makedirs('data/hk/')
+    df.to_csv(f'data/hk/HKNewStockCalendar{now_time}.csv', index=False, encoding='utf-8')
+    # df.to_excel(f'data/hk/HKNewStockCalendar{now_time}.xlsx', index=False, encoding='utf-8')
+
     return new_stocks
 
 def write2excel(new_stocks):
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     new_stock_list = []
     for new_stock in new_stocks:
         new_stock_list.append(new_stock.values())        
     
     df = pd.DataFrame(new_stock_list, columns=['市场', '股票代码', '股票名称', '发行总数(万股)', '上市价格', '每手股数', '币种', '申购起始', '申购结束', '上市时间'])
-    if not os.path.exists('data/'):
-        os.makedirs('data/')
-    df.to_csv('data/HKNewStockCalendar.csv', index=False, encoding='utf-8')
-    df.to_excel('data/HKNewStockCalendar.xlsx', index=False, encoding='utf-8')
+    if not os.path.exists('data/hk/'):
+        os.makedirs('data/hk/')
+    df.to_csv(f'data/hk/HKNewStockCalendar{now_time}.csv', index=False, encoding='utf-8')
+    # df.to_excel(f'data/hk/HKNewStockCalendar{now_time}.xlsx', index=False, encoding='utf-8')
     return new_stock_list
 
 
-HKNewStockCalendar = HKNewStockCalendar()
+
+# HKNewStockCalendar = HKNewStockCalendar()
 # # print(HKNewStockCalendar)
 # for new_stock in HKNewStockCalendar:
 #     print(new_stock)
 
-write2excel = write2excel(HKNewStockCalendar)
-print(write2excel)
+# write2excel = write2excel(HKNewStockCalendar)
+# print(write2excel)
+
+while True:
+    try:
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        HKNewStockCalendar()
+        print('now_time:', now_time)
+        time.sleep(5)
+    except Exception as e:
+        raise e
