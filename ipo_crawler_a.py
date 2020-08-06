@@ -5,6 +5,7 @@ import random
 import requests
 import os
 import pandas as pd
+import psycopg2
 import re
 from bs4 import BeautifulSoup
 
@@ -76,7 +77,7 @@ def ANewStockCalendar():
             }
             new_stocks.append(new_stocks_data)
             
-    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
     new_stock_list = []
     for new_stock in new_stocks:
         new_stock_list.append(new_stock.values())        
@@ -86,6 +87,32 @@ def ANewStockCalendar():
     df.to_csv(f'data/a/ANewStockCalendar{now_time}.csv', index=False, encoding='utf-8')
     # df.to_excel(f'data/a/ANewStockCalendar{now_time}.xlsx', index=False, encoding='utf-8')
 
+    database = 'ipo_crawler'
+    user = 'postgres'
+    password = '@Futeng2466'
+    host = '127.0.0.1'
+    port ='5432'
+
+    conn = psycopg2.connect(database=database, user=user, password=password, host=host, port=port)
+    cur = conn.cursor()
+    
+    for new_stock in new_stocks:
+        market = new_stock['market']
+        stock_code = new_stock['stock_code']
+        stock_name = new_stock['stock_name']
+        total_issued = new_stock['total_issued']
+        public_price = new_stock['public_price']
+        lots_size = new_stock['lots_size']
+        currency = new_stock['currency']
+        subscription_date_start = new_stock['subscription_date_start']
+        subscription_date_end = new_stock['subscription_date_end']
+        public_date = new_stock['public_date']
+        
+        insert_sql = f"INSERT INTO ipocrawler (market, stock_code, stock_name, total_issued, public_price, lots_size, currency, subscription_date_start, subscription_date_end, public_date) VALUES ('{market}', '{stock_code}', '{stock_name}', '{total_issued}', '{public_price}', '{lots_size}', '{currency}', '{subscription_date_start}', '{subscription_date_end}', '{public_date}');"
+        cur.execute(insert_sql)
+    conn.commit()
+    conn.close()
+    
     return new_stocks
 
 def write2excel(new_stocks):
@@ -111,7 +138,7 @@ def write2excel(new_stocks):
 # print(write2excel)
 
 while True:
-    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
     ANewStockCalendar()
     print('now_time:', now_time)
     time.sleep(120)
