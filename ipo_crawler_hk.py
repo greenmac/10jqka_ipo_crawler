@@ -9,7 +9,7 @@ import psycopg2
 from bs4 import BeautifulSoup
 
 
-def HKNewStockCalendar():
+def HKNewStockCalendar(page_nums=5):
     proxyMeta = "http://H8529Z74T50DA54P:9333CB6DFBF464B6@http-pro.abuyun.com:9010";
     proxies = {
         "http": proxyMeta,
@@ -30,8 +30,8 @@ def HKNewStockCalendar():
 
     # 港股新股
     new_stocks = []
-    for i in range(6):
-        url = f'http://data.10jqka.com.cn/ipo/xgsgyzq/board/hkstock/field/end_buy_time/page/{i}/order/desc/ajax/1/'
+    for page_num in range(page_nums+1):
+        url = f'http://data.10jqka.com.cn/ipo/xgsgyzq/board/hkstock/field/end_buy_time/page/{page_num}/order/desc/ajax/1/'
         res = requests.get(url, headers=headers, proxies=proxies)
         res.encoding = 'GBK'
         soup  = BeautifulSoup(res.text, 'lxml')

@@ -10,7 +10,7 @@ import re
 from bs4 import BeautifulSoup
 
 
-def ANewStockCalendar():
+def ANewStockCalendar(page_nums=5):
     proxyMeta = "http://H8529Z74T50DA54P:9333CB6DFBF464B6@http-pro.abuyun.com:9010";
     proxies = {
         "http": proxyMeta,
@@ -31,8 +31,8 @@ def ANewStockCalendar():
 
     # A股新股
     new_stocks = []
-    for i in range(6):
-        url = f'http://data.10jqka.com.cn/ipo/xgsgyzq/board/all/field/SGDATE/page/{i}/order/desc/ajax/1/'
+    for page_num in range(page_nums+1):
+        url = f'http://data.10jqka.com.cn/ipo/xgsgyzq/board/all/field/SGDATE/page/{page_num}/order/desc/ajax/1/'
         res = requests.get(url, headers=headers, proxies=proxies)
         res.encoding = 'GBK'
         soup  = BeautifulSoup(res.text, 'lxml')
@@ -59,7 +59,7 @@ def ANewStockCalendar():
                 '%Y-%m-%d') # A股规定 申购日+2day 为 截止日
             
             public_date_origin = str(td_list[14].text.strip())
-            public_date = start_year + '-' +public_date_origin
+            public_date = start_year + '-' + public_date_origin
             if public_date_origin == '-':
                 public_date = public_date_origin
             
@@ -70,7 +70,7 @@ def ANewStockCalendar():
                 'total_issued': str(td_list[3].text.strip()),
                 'public_price': str(public_price),
                 'lots_size': '100',
-                'currency': 'CNY',
+                'currency': '人民币',
                 'subscription_date_start': str(subscription_date_start),
                 'subscription_date_end': str(subscription_date_end),
                 'public_date': str(public_date),
