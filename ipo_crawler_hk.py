@@ -86,7 +86,7 @@ def HKNewStockCalendar(page_nums=5):
         subscription_date_end = new_stock['subscription_date_end']
         public_date = new_stock['public_date']
         
-        insert_sql = f"INSERT INTO ipocrawler (market, stock_code, stock_name, total_issued, public_price, lots_size, currency, subscription_date_start, subscription_date_end, public_date) VALUES ('{market}', '{stock_code}', '{stock_name}', '{total_issued}', '{public_price}', '{lots_size}', '{currency}', '{subscription_date_start}', '{subscription_date_end}', '{public_date}');"
+        insert_sql = f"INSERT INTO ipo_crawler (market, stock_code, stock_name, total_issued, public_price, lots_size, currency, subscription_date_start, subscription_date_end, public_date) VALUES ('{market}', '{stock_code}', '{stock_name}', '{total_issued}', '{public_price}', '{lots_size}', '{currency}', '{subscription_date_start}', '{subscription_date_end}', '{public_date}');"
         cur.execute(insert_sql)
     conn.commit()
     conn.close()
@@ -107,17 +107,18 @@ def write2excel(new_stocks):
     return new_stock_list
 
 
-
-# HKNewStockCalendar = HKNewStockCalendar()
-# # print(HKNewStockCalendar)
-# for new_stock in HKNewStockCalendar:
-#     print(new_stock)
+now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
+HKNewStockCalendar = HKNewStockCalendar()
+# print(HKNewStockCalendar)
+for new_stock in HKNewStockCalendar:
+    print(new_stock)
+print('now_time:', now_time)
 
 # write2excel = write2excel(HKNewStockCalendar)
 # print(write2excel)
 
-while True:
-    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
-    HKNewStockCalendar()
-    print('now_time:', now_time)
-    time.sleep(120)
+# while True:
+#     now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
+#     HKNewStockCalendar()
+#     print('now_time:', now_time)
+#     time.sleep(120)
