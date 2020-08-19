@@ -12,8 +12,8 @@ conn = psycopg2.connect(database=database, user=user, password=password, host=ho
 
 cur = conn.cursor()
 
-# sql_create_table = "CREATE TABLE ipo_crawler (id serial not null primary key, market char(20) not NULL, stock_code char(20) not NULL, stock_name char(20) not NULL, total_issued char(20) not NULL, public_price char(20) not NULL, lots_size char(20) not NULL, currency char(20) not NULL, subscription_date_start char(20) not NULL, subscription_date_end char(20) not NULL, public_date char(20) not NULL);"
-sql_create_table = "CREATE TABLE stock_event (id serial not null primary key, market char(20) not NULL, stock_code char(20) not NULL, stock_name char(20) not NULL, sus_trad_status char(20) not NULL, suspension_price char(20), trading_price char(20), currency char(20) not NULL, suspension_date_start char(20), trading_date_start char(20), suspension_reason char(20) not NULL);"
+sql_create_table = "CREATE TABLE ipo_crawler (id serial not null primary key, market char(20) not NULL, stock_code char(20) not NULL, stock_name char(20) not NULL, total_issued char(20) not NULL, public_price char(20) not NULL, lots_size char(20) not NULL, currency char(20) not NULL, subscription_date_start char(20) not NULL, subscription_date_end char(20) not NULL, public_date char(20) not NULL);"
+# sql_create_table = "CREATE TABLE stock_event (id serial not null primary key, market char(20) not NULL, stock_code char(20) not NULL, stock_name char(20) not NULL, sus_trad_status char(20) not NULL, suspension_price char(20), trading_price char(20), currency char(20) not NULL, suspension_date_start char(20), trading_date_start char(20), suspension_reason char(20) not NULL);"
 cur.execute(sql_create_table)
 print("Created table Successfull.")
 

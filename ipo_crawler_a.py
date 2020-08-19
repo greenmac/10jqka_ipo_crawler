@@ -69,8 +69,8 @@ def ANewStockCalendar(page_nums=5):
                 'stock_name': str(td_list[1].text.strip()),
                 'total_issued': str(td_list[3].text.strip()),
                 'public_price': str(public_price),
-                'lots_size': '100',
-                'currency': '人民币',
+                'lots_size': str('100'),
+                'currency': str('CNY'),
                 'subscription_date_start': str(subscription_date_start),
                 'subscription_date_end': str(subscription_date_end),
                 'public_date': str(public_date),
@@ -108,7 +108,7 @@ def ANewStockCalendar(page_nums=5):
         subscription_date_end = new_stock['subscription_date_end']
         public_date = new_stock['public_date']
         
-        insert_sql = f"INSERT INTO ipocrawler (market, stock_code, stock_name, total_issued, public_price, lots_size, currency, subscription_date_start, subscription_date_end, public_date) VALUES ('{market}', '{stock_code}', '{stock_name}', '{total_issued}', '{public_price}', '{lots_size}', '{currency}', '{subscription_date_start}', '{subscription_date_end}', '{public_date}');"
+        insert_sql = f"INSERT INTO ipo_crawler (market, stock_code, stock_name, total_issued, public_price, lots_size, currency, subscription_date_start, subscription_date_end, public_date) VALUES ('{market}', '{stock_code}', '{stock_name}', '{total_issued}', '{public_price}', '{lots_size}', '{currency}', '{subscription_date_start}', '{subscription_date_end}', '{public_date}');"
         cur.execute(insert_sql)
     conn.commit()
     conn.close()
@@ -129,16 +129,18 @@ def write2excel(new_stocks):
     return new_stock_list
 
 
-# ANewStockCalendar = ANewStockCalendar()
+now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
+ANewStockCalendar = ANewStockCalendar()
 # print(HKNewStockCalendar)
-# for new_stock in ANewStockCalendar:
-#     print(new_stock)
+for new_stock in ANewStockCalendar:
+    print(new_stock)
+print('now_time:', now_time)
 
 # write2excel = write2excel(ANewStockCalendar)
 # print(write2excel)
 
-while True:
-    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
-    ANewStockCalendar()
-    print('now_time:', now_time)
-    time.sleep(120)
+# while True:
+#     now_time = datetime.datetime.now().strftime('%Y-%m-%d %H^%M^%S')
+#     ANewStockCalendar()
+#     print('now_time:', now_time)
+#     time.sleep(120)

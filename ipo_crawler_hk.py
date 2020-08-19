@@ -32,7 +32,8 @@ def HKNewStockCalendar(page_nums=5):
     new_stocks = []
     for page_num in range(1, page_nums+1):
         url = f'http://data.10jqka.com.cn/ipo/xgsgyzq/board/hkstock/field/end_buy_time/page/{page_num}/order/desc/ajax/1/'
-        res = requests.get(url, headers=headers, proxies=proxies)
+        # res = requests.get(url, headers=headers, proxies=proxies)
+        res = requests.get(url, headers=headers)
         res.encoding = 'GBK'
         soup  = BeautifulSoup(res.text, 'lxml')
         tr_list = soup.select('tbody tr')
@@ -42,13 +43,13 @@ def HKNewStockCalendar(page_nums=5):
             public_price = td_list[6].text.strip().replace('-', '~')
             
             new_stocks_data = {
-                'market': 'HK',
+                'market': str('HK'),
                 'stock_code': str(td_list[0].text.strip()),
                 'stock_name': str(td_list[1].text.strip()),
                 'total_issued': str(td_list[2].text.strip()),
                 'public_price': str(public_price),
                 'lots_size': str(td_list[7].text.strip()),
-                'currency': str(td_list[8].text.strip()),
+                'currency': str('HKD'),
                 'subscription_date_start': str(td_list[9].text.strip()),
                 'subscription_date_end': str(td_list[10].text.strip()),
                 'public_date': str(td_list[13].text.strip()),
