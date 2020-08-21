@@ -33,7 +33,8 @@ def ANewStockCalendar(page_nums=5):
     new_stocks = []
     for page_num in range(1, page_nums+1):
         url = f'http://data.10jqka.com.cn/ipo/xgsgyzq/board/all/field/SGDATE/page/{page_num}/order/desc/ajax/1/'
-        res = requests.get(url, headers=headers, proxies=proxies)
+        # res = requests.get(url, headers=headers, proxies=proxies)
+        res = requests.get(url, headers=headers)
         res.encoding = 'GBK'
         soup  = BeautifulSoup(res.text, 'lxml')
         tr_list = soup.select('tbody tr')
